@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI사업2팀 Weekly Portal</title>
+<style>
+:root {
+    --bg: #F5F5F7;
+    --text: #1D1D1F;
+    --text-secondary: #6E6E73;
+    --text-tertiary: #86868B;
+    --accent: #0071E3;
+    --card-bg: #FFFFFF;
+    --card-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    --card-shadow-hover: 0 8px 28px rgba(0,0,0,0.12);
+    --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    --radius: 20px;
+    --nav-height: 52px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+    font-family: var(--font);
+    -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* ── Navigation ── */
+.nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: var(--nav-height);
+    background: rgba(245,245,247,0.72);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0,0,0,0.08);
+    z-index: 100;
+    display: flex; align-items: center; justify-content: center;
+}
+.nav-inner {
+    max-width: 980px; width: 100%;
+    padding: 0 24px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.nav-brand {
+    font-size: 17px; font-weight: 600;
+    color: var(--text); letter-spacing: -0.3px;
+}
+.nav-links { display: flex; gap: 32px; }
+.nav-link {
+    font-size: 14px; font-weight: 400;
+    color: var(--text-secondary); text-decoration: none;
+    cursor: pointer; transition: color 0.2s; padding: 4px 0;
+    position: relative;
+}
+.nav-link:hover { color: var(--text); }
+.nav-link.active { color: var(--text); font-weight: 500; }
+.nav-link.active::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; right: 0;
+    height: 2px; background: var(--accent); border-radius: 1px;
+}
+
+/* ── Main ── */
+.main { padding-top: var(--nav-height); min-height: 100vh; }
+
+/* ── Hero ── */
+.hero {
+    padding: 80px 24px 60px; text-align: center;
+}
+.hero h1 {
+    font-size: clamp(36px, 6vw, 56px);
+    font-weight: 700; letter-spacing: -1.5px;
+    line-height: 1.08; margin-bottom: 12px;
+}
+.hero p {
+    font-size: 21px; color: var(--text-secondary);
+    font-weight: 400; max-width: 600px;
+    margin: 0 auto; line-height: 1.4;
+}
+
+/* ── Section ── */
+.section {
+    max-width: 980px; margin: 0 auto;
+    padding: 0 24px 80px;
+}
+.section-header {
+    display: flex; align-items: baseline;
+    justify-content: space-between; margin-bottom: 24px;
+}
+.section-title {
+    font-size: 28px; font-weight: 600; letter-spacing: -0.5px;
+}
+.section-link {
+    font-size: 17px; color: var(--accent);
+    text-decoration: none; cursor: pointer;
+}
+.section-link:hover { text-decoration: underline; }
+
+/* ── Card Grid (Home) ── */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+.card {
+    background: var(--card-bg); border-radius: var(--radius);
+    padding: 28px; box-shadow: var(--card-shadow);
+    text-decoration: none; color: var(--text); display: block;
+    transition: transform 0.3s cubic-bezier(0.25,0.46,0.45,0.94),
+                box-shadow 0.3s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow-hover);
+}
+.card-week {
+    font-size: 14px; font-weight: 600; color: var(--accent);
+    margin-bottom: 10px;
+}
+.card-date {
+    font-size: 26px; font-weight: 600;
+    letter-spacing: -0.5px; margin-bottom: 6px;
+}
+.card-title {
+    font-size: 15px; color: var(--text-secondary); line-height: 1.4;
+}
+.card-arrow {
+    margin-top: 20px; font-size: 20px; color: var(--accent);
+    transition: transform 0.2s;
+}
+.card:hover .card-arrow { transform: translateX(4px); }
+
+/* ── Logs List ── */
+.logs-list { display: flex; flex-direction: column; gap: 12px; }
+.log-row {
+    background: var(--card-bg); border-radius: 16px;
+    padding: 20px 28px; box-shadow: var(--card-shadow);
+    display: flex; align-items: center; justify-content: space-between;
+    text-decoration: none; color: var(--text);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.log-row:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--card-shadow-hover);
+}
+.log-left { display: flex; align-items: center; gap: 20px; }
+.log-week-badge {
+    font-size: 13px; font-weight: 600; color: var(--accent);
+    background: rgba(0,113,227,0.08); padding: 6px 14px;
+    border-radius: 980px; min-width: 56px; text-align: center;
+}
+.log-info h3 { font-size: 17px; font-weight: 500; margin-bottom: 2px; }
+.log-info span { font-size: 14px; color: var(--text-secondary); }
+.log-arrow { font-size: 22px; color: var(--text-tertiary); }
+
+/* ── Page Routing ── */
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Footer ── */
+.footer {
+    text-align: center; padding: 40px 24px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+}
+.footer span { font-size: 13px; color: var(--text-tertiary); }
+
+/* ── Empty State ── */
+.empty {
+    text-align: center; padding: 60px 24px;
+    color: var(--text-secondary); font-size: 17px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 734px) {
+    .hero { padding: 48px 24px 40px; }
+    .hero p { font-size: 17px; }
+    .section-title { font-size: 22px; }
+    .card-grid { grid-template-columns: 1fr; }
+    .nav-brand { font-size: 15px; }
+    .nav-links { gap: 20px; }
+    .log-left { gap: 12px; }
+    .log-row { padding: 16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+    <div class="nav-inner">
+        <span class="nav-brand">AI&#49324;&#50629;2&#54016;</span>
+        <div class="nav-links">
+            <a class="nav-link active" data-page="home">Home</a>
+            <a class="nav-link" data-page="logs">Weekly Logs</a>
+        </div>
+    </div>
+</nav>
+
+<main class="main">
+    <!-- Home -->
+    <div id="page-home" class="page active">
+        <div class="hero">
+            <h1>Weekly Portal</h1>
+            <p>AI&#49324;&#50629;2&#54016;&#51032; &#51452;&#44036; &#50629;&#47924;&#47484; &#54620;&#45576;&#50640;.</p>
+        </div>
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">&#52572;&#44540; &#50629;&#47924;</h2>
+                <a class="section-link" data-page="logs">&#47784;&#46160; &#48372;&#44592; &rarr;</a>
+            </div>
+            <div id="recent-cards" class="card-grid">
+                <div class="empty">&#47196;&#46377; &#51473;...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weekly Logs -->
+    <div id="page-logs" class="page">
+        <div class="hero" style="padding-bottom:40px;">
+            <h1>Weekly Logs</h1>
+            <p>&#51452;&#44036; &#50629;&#47924; &#50500;&#52852;&#51060;&#48652;</p>
+        </div>
+        <div class="section">
+            <div id="logs-list" class="logs-list">
+                <div class="empty">&#47196;&#46377; &#51473;...</div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <span>AI&#49324;&#50629;2&#54016; &middot; LG&#50976;&#54540;&#47084;&#49828;</span>
+</footer>
+
+<script>
+(function() {
+    var manifest = [];
+
+    fetch('manifest.json?v=' + Date.now())
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+            manifest = data.sort(function(a, b) { return b.date.localeCompare(a.date); });
+            renderHome();
+            renderLogs();
+        })
+        .catch(function() {
+            document.getElementById('recent-cards').innerHTML =
+                '<div class="empty">\uB370\uC774\uD130\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4.</div>';
+        });
+
+    function fmtDate(s) {
+        var d = new Date(s);
+        var mm = ('0' + (d.getMonth() + 1)).slice(-2);
+        var dd = ('0' + d.getDate()).slice(-2);
+        return d.getFullYear() + '.' + mm + '.' + dd;
+    }
+
+    function renderHome() {
+        var recent = manifest.slice(0, 3);
+        if (!recent.length) {
+            document.getElementById('recent-cards').innerHTML =
+                '<div class="empty">\uC544\uC9C1 \uB4F1\uB85D\uB41C Weekly Logs\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</div>';
+            return;
+        }
+        document.getElementById('recent-cards').innerHTML = recent.map(function(item) {
+            return '<a href="' + item.path + '" class="card">' +
+                '<div class="card-week">' + item.week + '</div>' +
+                '<div class="card-date">' + fmtDate(item.date) + '</div>' +
+                '<div class="card-title">' + item.title + '</div>' +
+                '<div class="card-arrow">&rarr;</div></a>';
+        }).join('');
+    }
+
+    function renderLogs() {
+        if (!manifest.length) {
+            document.getElementById('logs-list').innerHTML =
+                '<div class="empty">\uC544\uC9C1 \uB4F1\uB85D\uB41C Weekly Logs\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4.</div>';
+            return;
+        }
+        document.getElementById('logs-list').innerHTML = manifest.map(function(item) {
+            return '<a href="' + item.path + '" class="log-row">' +
+                '<div class="log-left">' +
+                '<span class="log-week-badge">' + item.week + '</span>' +
+                '<div class="log-info"><h3>' + item.title + '</h3>' +
+                '<span>' + fmtDate(item.date) + '</span></div></div>' +
+                '<span class="log-arrow">\u203A</span></a>';
+        }).join('');
+    }
+
+    // Routing
+    function navigate(page) {
+        var pages = document.querySelectorAll('.page');
+        var links = document.querySelectorAll('.nav-link');
+        for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+        for (var i = 0; i < links.length; i++) links[i].classList.remove('active');
+        var target = document.getElementById('page-' + page);
+        var link = document.querySelector('[data-page="' + page + '"]');
+        if (target) target.classList.add('active');
+        if (link) link.classList.add('active');
+        window.location.hash = page === 'home' ? '' : page;
+        window.scrollTo(0, 0);
+    }
+
+    var navLinks = document.querySelectorAll('[data-page]');
+    for (var i = 0; i < navLinks.length; i++) {
+        navLinks[i].addEventListener('click', function(e) {
+            e.preventDefault();
+            navigate(this.getAttribute('data-page'));
+        });
+    }
+
+    var hash = window.location.hash.replace('#', '');
+    if (hash === 'logs') navigate('logs');
+
+    window.addEventListener('hashchange', function() {
+        var h = window.location.hash.replace('#', '');
+        navigate(h || 'home');
+    });
+})();
+</script>
+
+</body>
+</html>

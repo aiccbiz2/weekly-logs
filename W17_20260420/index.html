@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>20260420_AI사업2팀 Weekly Logs</title>
+<style>
+    :root {
+        --bg: #F5F5F7;
+        --window-bg: #FFFFFF;
+        --text: #1D1D1F;
+        --text-secondary: #6E6E73;
+        --text-tertiary: #86868B;
+        --accent: #0071E3;
+        --border: #E5E5EA;
+        --border-light: #F2F2F7;
+        --card-bg: #FFFFFF;
+        --card-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+        --card-shadow-hover: 0 6px 20px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
+        --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+        --mono: 'SF Mono', Menlo, Consolas, monospace;
+        --radius: 16px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--font); -webkit-font-smoothing:antialiased; background:var(--bg); color:var(--text); }
+
+    /* Back to Portal */
+    .portal-nav {
+        max-width:800px; margin:0 auto; padding:20px 16px 0;
+    }
+    .portal-nav a {
+        font-size:14px; color:var(--accent); text-decoration:none;
+        font-weight:500; transition:opacity 0.15s;
+    }
+    .portal-nav a:hover { opacity:0.7; }
+
+    /* macOS Window */
+    .window-wrap { max-width:800px; margin:0 auto; padding:12px 16px 40px; }
+    .window { border-radius:12px; overflow:hidden; background:var(--bg);
+               box-shadow:0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06); }
+
+    /* Title Bar */
+    .title-bar { background:linear-gradient(180deg,#F6F6F6 0%,#E2E2E2 100%);
+                  border-bottom:1px solid #C8C8C8; padding:12px 16px;
+                  display:flex; align-items:center; position:relative; }
+    .traffic-lights { display:flex; gap:8px; flex-shrink:0; }
+    .traffic-lights span { width:12px; height:12px; border-radius:50%; display:block; }
+    .tl-red { background:#FF5F57; }
+    .tl-yellow { background:#FEBC2E; }
+    .tl-green { background:#28C840; }
+    .title-text { position:absolute; left:0; right:0; text-align:center;
+                   font-size:13px; font-weight:500; color:#4D4D4D; pointer-events:none; }
+
+    /* Toolbar */
+    .toolbar { background:#F5F5F5; border-bottom:1px solid #DEDEDE;
+                padding:8px 28px; display:flex; align-items:center; gap:6px; }
+    .toolbar .crumb { font-size:12px; color:var(--text-tertiary); }
+    .toolbar .crumb-sep { font-size:12px; color:#C7C7CC; }
+    .toolbar .crumb-active { font-size:12px; color:var(--text); font-weight:500; }
+    .toolbar .notion-link { margin-left:auto; font-size:11px; color:var(--accent);
+                             text-decoration:none; padding:4px 12px; background:rgba(0,113,227,0.07);
+                             border-radius:6px; font-weight:500; }
+    .toolbar .notion-link:hover { background:rgba(0,113,227,0.14); }
+
+    /* Hero */
+    .hero { padding:36px 32px 28px; background:var(--window-bg); }
+    .hero h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.2; padding-bottom:8px; }
+    .hero p { font-size:15px; color:var(--text-secondary); line-height:1.5; }
+
+    /* Content Area */
+    .content { padding:8px 24px 32px; }
+
+    /* Section Block */
+    .section-block { margin-bottom:24px; }
+    .section-title { font-size:20px; font-weight:700; letter-spacing:-0.3px;
+                      padding:16px 8px 12px; color:var(--text); }
+
+    /* Announcement Card */
+    .announce-card { background:var(--card-bg); border-radius:var(--radius); padding:20px 24px;
+                      box-shadow:var(--card-shadow); transition:box-shadow 0.2s; }
+    .announce-card:hover { box-shadow:var(--card-shadow-hover); }
+
+    /* Person Card Grid */
+    .card-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+
+    /* Person Card */
+    .person-card { background:var(--card-bg); border-radius:var(--radius); padding:20px 24px;
+                    box-shadow:var(--card-shadow); transition:box-shadow 0.2s, transform 0.2s; }
+    .person-card:hover { box-shadow:var(--card-shadow-hover); transform:translateY(-2px); }
+    .person-header { display:flex; align-items:center; gap:10px; padding-bottom:14px;
+                      border-bottom:1px solid var(--border-light); margin-bottom:12px; }
+    .person-name { font-size:16px; font-weight:600; letter-spacing:-0.1px; }
+    .person-badge { font-size:11px; font-weight:600; color:var(--accent);
+                     background:rgba(0,113,227,0.08); padding:2px 10px;
+                     border-radius:980px; }
+
+    /* Task Items — Reminders circle style */
+    .task-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; }
+    .task-dot { display:inline-block; width:18px; height:18px; border-radius:50%;
+                 border:1.5px solid #C7C7CC; flex-shrink:0; margin-top:2px;
+                 background:transparent; }
+    .task-text { font-size:14px; line-height:1.6; color:var(--text); }
+    .sub-item { display:flex; align-items:flex-start; gap:8px; padding:4px 0 4px 38px; }
+    .sub-dot { display:inline-block; width:14px; height:14px; border-radius:50%;
+                border:1.5px solid #D1D1D6; flex-shrink:0; margin-top:2px;
+                background:transparent; }
+    .sub-item span:last-child { font-size:13px; color:var(--text-secondary); line-height:1.5; }
+    .sub-link { padding:4px 0 4px 28px; }
+    .sub-link a { color:var(--accent); font-size:13px; font-family:var(--mono);
+                   text-decoration:none; }
+    .sub-link a:hover { text-decoration:underline; }
+
+    /* Detail Toggle */
+    .detail-wrap { padding:6px 0 2px 28px; }
+    details summary::-webkit-details-marker { display:none; }
+    .detail-pill { display:inline-block; padding:5px 14px; font-size:12px; font-weight:500;
+                    color:var(--accent); background:var(--border-light); border:1px solid var(--border);
+                    border-radius:980px; cursor:pointer; list-style:none;
+                    transition:background 0.15s; }
+    .detail-pill:hover { background:#E8E8ED; }
+    .detail-content { margin-top:10px; padding:16px; background:#F9F9FB; border-radius:12px;
+                       font-size:13px; color:#3A3A3C; line-height:1.6; border:1px solid var(--border-light); }
+    .detail-content img { max-width:100%; border-radius:8px; border:1px solid var(--border); }
+    .detail-content table { width:100%; border-collapse:collapse; margin-top:8px; font-size:13px; }
+    .detail-content th { text-align:left; padding:8px 10px; background:var(--border-light);
+                          border-bottom:1px solid var(--border); }
+    .detail-content td { padding:6px 10px; border-bottom:1px solid var(--border-light); }
+
+    /* Footer */
+    .footer-divider { margin:0 24px; border-top:1px solid var(--border); }
+    .footer-note { margin:16px 24px; background:var(--border-light); border-radius:12px; padding:14px 18px; }
+    .footer-note span { font-size:13px; color:#3A3A3C; line-height:1.5; }
+    .footer-cta { padding:4px 24px 28px; text-align:center; }
+    .footer-cta a { display:inline-block; padding:10px 28px; background:var(--accent); color:#FFF;
+                     border-radius:980px; font-size:14px; font-weight:500; text-decoration:none;
+                     transition:background 0.15s; }
+    .footer-cta a:hover { background:#005BBB; }
+    .bottom-bar { background:#F9F9F9; border-top:1px solid var(--border);
+                   padding:10px 28px; text-align:center; }
+    .bottom-bar span { font-size:11px; color:#AEAEB2; }
+
+    /* Responsive */
+    @media (max-width:600px) {
+        .portal-nav { padding:12px 8px 0; }
+        .window-wrap { padding:8px 8px 24px; }
+        .hero { padding:24px 20px 20px; }
+        .hero h1 { font-size:22px; }
+        .content { padding:8px 12px 24px; }
+        .announce-card, .person-card { padding:16px 18px; }
+        .section-title { font-size:18px; padding:12px 4px 10px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="portal-nav">
+    <a href="../">&larr; Weekly Portal</a>
+</div>
+
+<div class="window-wrap">
+<div class="window">
+
+    <!-- Title Bar -->
+    <div class="title-bar">
+        <div class="traffic-lights">
+            <span class="tl-red"></span>
+            <span class="tl-yellow"></span>
+            <span class="tl-green"></span>
+        </div>
+        <div class="title-text">AI사업2팀 &mdash; Weekly Logs</div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <span class="crumb">AI사업2팀</span>
+        <span class="crumb-sep">&rsaquo;</span>
+        <span class="crumb-active">20260420</span>
+        <a href="https://www.notion.so/347b592202868148b175ce6065b143ff" class="notion-link">Notion &rarr;</a>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+        <h1>Weekly Logs</h1>
+        <p>안녕하세요. 양준모입니다. 이번주 To Do 정리하여 전달드립니다.</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        
+        <div class="section-block">
+            <h2 class="section-title">팀 공지사항</h2>
+            <div class="announce-card">
+                <div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">아래 영상을 시간 내서 시청해 주시기 바랍니다.</span>
+        </div><div class="sub-link"><a href="https://www.youtube.com/watch?v=9fQCxWSxw4k">https://www.youtube.com/watch?v=9fQCxWSxw4k &#8599;</a></div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">부문 리스크드러내기 의견을 제출해 주시기 바랍니다. 취합 담당자는 배홍주 책임님입니다. (사업추진팀 메일 참고)</span>
+        </div>
+            </div>
+        </div>
+        
+        <div class="section-block">
+            <h2 class="section-title">개인별 To Do</h2>
+            <div class="card-grid"><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">김민식 책임님</span>
+                    <span class="person-badge">1</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">CS리더 대표님 미팅 Agenda를 작성해 주시기 바랍니다. CS리더 인력 필요 관련 논리 구성이 필요하며, 김준희 책임님과 논의해 주시기 바랍니다.</span>
+        </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">김은희 책임님</span>
+                    <span class="person-badge">2</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">고은정 대표 점심식사 일정을 arrange해 주시기 바랍니다.</span>
+        </div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">영업 교육 일정을 arrange해 주시기 바랍니다. (동부고객담당, 서부고객담당)</span>
+        </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">최종우 책임님</span>
+                    <span class="person-badge">2</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">을지대병원 교수님 수정 요청 건 1page 보고서 초안을 리뷰해 주시기 바랍니다. 목요일 일정을 등록하여 팀 내 리뷰를 진행해 주시기 바랍니다.</span>
+        </div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">BPO Profit Sharing Model 해외 사례를 검토해 주시기 바랍니다. (이진용 책임님 공동)</span>
+        </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">이진용 책임님</span>
+                    <span class="person-badge">1</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">BPO Profit Sharing Model 해외 사례를 검토해 주시기 바랍니다. (최종우 책임님 공동)</span>
+        </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">배홍주 책임님</span>
+                    <span class="person-badge">1</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">Claude Opus 4.7 출시 후 Claude Design 기능을 활용하여 C Agent UI 개선을 검토해 주시기 바랍니다.</span>
+        </div></div>
+            </div></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-divider"></div>
+    <div class="footer-note">
+        <span>김은희 책임님, 팀 컨플루언스 주간회의 페이지 내 저장해 주시기 바랍니다. (방법은 최종우님께 문의해주세요)</span>
+    </div>
+    <div class="footer-cta">
+        <a href="https://www.notion.so/347b592202868148b175ce6065b143ff">Notion 페이지 열기</a>
+    </div>
+    <div class="bottom-bar">
+        <span>AI사업2팀 &middot; LG유플러스</span>
+    </div>
+
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>20260406_AI사업2팀 Weekly Logs</title>
+<style>
+    :root {
+        --bg: #F5F5F7;
+        --window-bg: #FFFFFF;
+        --text: #1D1D1F;
+        --text-secondary: #6E6E73;
+        --text-tertiary: #86868B;
+        --accent: #0071E3;
+        --border: #E5E5EA;
+        --border-light: #F2F2F7;
+        --card-bg: #FFFFFF;
+        --card-shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+        --card-shadow-hover: 0 6px 20px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06);
+        --font: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+        --mono: 'SF Mono', Menlo, Consolas, monospace;
+        --radius: 16px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--font); -webkit-font-smoothing:antialiased; background:var(--bg); color:var(--text); }
+
+    /* Back to Portal */
+    .portal-nav {
+        max-width:800px; margin:0 auto; padding:20px 16px 0;
+    }
+    .portal-nav a {
+        font-size:14px; color:var(--accent); text-decoration:none;
+        font-weight:500; transition:opacity 0.15s;
+    }
+    .portal-nav a:hover { opacity:0.7; }
+
+    /* macOS Window */
+    .window-wrap { max-width:800px; margin:0 auto; padding:12px 16px 40px; }
+    .window { border-radius:12px; overflow:hidden; background:var(--bg);
+               box-shadow:0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06); }
+
+    /* Title Bar */
+    .title-bar { background:linear-gradient(180deg,#F6F6F6 0%,#E2E2E2 100%);
+                  border-bottom:1px solid #C8C8C8; padding:12px 16px;
+                  display:flex; align-items:center; position:relative; }
+    .traffic-lights { display:flex; gap:8px; flex-shrink:0; }
+    .traffic-lights span { width:12px; height:12px; border-radius:50%; display:block; }
+    .tl-red { background:#FF5F57; }
+    .tl-yellow { background:#FEBC2E; }
+    .tl-green { background:#28C840; }
+    .title-text { position:absolute; left:0; right:0; text-align:center;
+                   font-size:13px; font-weight:500; color:#4D4D4D; pointer-events:none; }
+
+    /* Toolbar */
+    .toolbar { background:#F5F5F5; border-bottom:1px solid #DEDEDE;
+                padding:8px 28px; display:flex; align-items:center; gap:6px; }
+    .toolbar .crumb { font-size:12px; color:var(--text-tertiary); }
+    .toolbar .crumb-sep { font-size:12px; color:#C7C7CC; }
+    .toolbar .crumb-active { font-size:12px; color:var(--text); font-weight:500; }
+    .toolbar .notion-link { margin-left:auto; font-size:11px; color:var(--accent);
+                             text-decoration:none; padding:4px 12px; background:rgba(0,113,227,0.07);
+                             border-radius:6px; font-weight:500; }
+    .toolbar .notion-link:hover { background:rgba(0,113,227,0.14); }
+
+    /* Hero */
+    .hero { padding:36px 32px 28px; background:var(--window-bg); }
+    .hero h1 { font-size:28px; font-weight:700; letter-spacing:-0.5px; line-height:1.2; padding-bottom:8px; }
+    .hero p { font-size:15px; color:var(--text-secondary); line-height:1.5; }
+
+    /* Content Area */
+    .content { padding:8px 24px 32px; }
+
+    /* Section Block */
+    .section-block { margin-bottom:24px; }
+    .section-title { font-size:20px; font-weight:700; letter-spacing:-0.3px;
+                      padding:16px 8px 12px; color:var(--text); }
+
+    /* Announcement Card */
+    .announce-card { background:var(--card-bg); border-radius:var(--radius); padding:20px 24px;
+                      box-shadow:var(--card-shadow); transition:box-shadow 0.2s; }
+    .announce-card:hover { box-shadow:var(--card-shadow-hover); }
+
+    /* Person Card Grid */
+    .card-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+
+    /* Person Card */
+    .person-card { background:var(--card-bg); border-radius:var(--radius); padding:20px 24px;
+                    box-shadow:var(--card-shadow); transition:box-shadow 0.2s, transform 0.2s; }
+    .person-card:hover { box-shadow:var(--card-shadow-hover); transform:translateY(-2px); }
+    .person-header { display:flex; align-items:center; gap:10px; padding-bottom:14px;
+                      border-bottom:1px solid var(--border-light); margin-bottom:12px; }
+    .person-name { font-size:16px; font-weight:600; letter-spacing:-0.1px; }
+    .person-badge { font-size:11px; font-weight:600; color:var(--accent);
+                     background:rgba(0,113,227,0.08); padding:2px 10px;
+                     border-radius:980px; }
+
+    /* Task Items — Reminders circle style */
+    .task-item { display:flex; align-items:flex-start; gap:10px; padding:8px 0; }
+    .task-dot { display:inline-block; width:18px; height:18px; border-radius:50%;
+                 border:1.5px solid #C7C7CC; flex-shrink:0; margin-top:2px;
+                 background:transparent; }
+    .task-text { font-size:14px; line-height:1.6; color:var(--text); }
+    .sub-item { display:flex; align-items:flex-start; gap:8px; padding:4px 0 4px 38px; }
+    .sub-dot { display:inline-block; width:14px; height:14px; border-radius:50%;
+                border:1.5px solid #D1D1D6; flex-shrink:0; margin-top:2px;
+                background:transparent; }
+    .sub-item span:last-child { font-size:13px; color:var(--text-secondary); line-height:1.5; }
+    .sub-link { padding:4px 0 4px 28px; }
+    .sub-link a { color:var(--accent); font-size:13px; font-family:var(--mono);
+                   text-decoration:none; }
+    .sub-link a:hover { text-decoration:underline; }
+
+    /* Detail Toggle */
+    .detail-wrap { padding:6px 0 2px 28px; }
+    details summary::-webkit-details-marker { display:none; }
+    .detail-pill { display:inline-block; padding:5px 14px; font-size:12px; font-weight:500;
+                    color:var(--accent); background:var(--border-light); border:1px solid var(--border);
+                    border-radius:980px; cursor:pointer; list-style:none;
+                    transition:background 0.15s; }
+    .detail-pill:hover { background:#E8E8ED; }
+    .detail-content { margin-top:10px; padding:16px; background:#F9F9FB; border-radius:12px;
+                       font-size:13px; color:#3A3A3C; line-height:1.6; border:1px solid var(--border-light); }
+    .detail-content img { max-width:100%; border-radius:8px; border:1px solid var(--border); }
+    .detail-content table { width:100%; border-collapse:collapse; margin-top:8px; font-size:13px; }
+    .detail-content th { text-align:left; padding:8px 10px; background:var(--border-light);
+                          border-bottom:1px solid var(--border); }
+    .detail-content td { padding:6px 10px; border-bottom:1px solid var(--border-light); }
+
+    /* Footer */
+    .footer-divider { margin:0 24px; border-top:1px solid var(--border); }
+    .footer-note { margin:16px 24px; background:var(--border-light); border-radius:12px; padding:14px 18px; }
+    .footer-note span { font-size:13px; color:#3A3A3C; line-height:1.5; }
+    .footer-cta { padding:4px 24px 28px; text-align:center; }
+    .footer-cta a { display:inline-block; padding:10px 28px; background:var(--accent); color:#FFF;
+                     border-radius:980px; font-size:14px; font-weight:500; text-decoration:none;
+                     transition:background 0.15s; }
+    .footer-cta a:hover { background:#005BBB; }
+    .bottom-bar { background:#F9F9F9; border-top:1px solid var(--border);
+                   padding:10px 28px; text-align:center; }
+    .bottom-bar span { font-size:11px; color:#AEAEB2; }
+
+    /* Responsive */
+    @media (max-width:600px) {
+        .portal-nav { padding:12px 8px 0; }
+        .window-wrap { padding:8px 8px 24px; }
+        .hero { padding:24px 20px 20px; }
+        .hero h1 { font-size:22px; }
+        .content { padding:8px 12px 24px; }
+        .announce-card, .person-card { padding:16px 18px; }
+        .section-title { font-size:18px; padding:12px 4px 10px; }
+    }
+</style>
+</head>
+<body>
+
+<div class="portal-nav">
+    <a href="../">&larr; Weekly Portal</a>
+</div>
+
+<div class="window-wrap">
+<div class="window">
+
+    <!-- Title Bar -->
+    <div class="title-bar">
+        <div class="traffic-lights">
+            <span class="tl-red"></span>
+            <span class="tl-yellow"></span>
+            <span class="tl-green"></span>
+        </div>
+        <div class="title-text">AI사업2팀 &mdash; Weekly Logs</div>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <span class="crumb">AI사업2팀</span>
+        <span class="crumb-sep">&rsaquo;</span>
+        <span class="crumb-active">20260406</span>
+        <a href="https://www.notion.so/20260406_AI-2-Weekly-Logs-339b592202868119b411dea7c66528e3" class="notion-link">Notion &rarr;</a>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+        <h1>Weekly Logs</h1>
+        <p>안녕하세요. 양준모입니다. 이번주 To Do 정리하여 전달드립니다.</p>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+        
+        <div class="section-block">
+            <h2 class="section-title">팀 공지사항</h2>
+            <div class="announce-card">
+                <div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">이번주 주간회의 때, 사업기회 리뷰가 예정이므로, 엑셀 사업기회 파일을 최신화해 주시기 바랍니다.</span>
+        </div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">아래 유튜브 영상을 리뷰해 주시기 바랍니다.</span>
+        </div><div class="sub-link"><a href="http://youtube.com/watch?v=1XWaAhnBI0U&feature=youtu.be">http://youtube.com/watch?v=1XWaAhnBI0U&feature=youtu.be &#8599;</a></div>
+            </div>
+        </div>
+        
+        <div class="section-block">
+            <h2 class="section-title">개인별 To Do</h2>
+            <div class="card-grid"><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">이진용 책임님</span>
+                    <span class="person-badge">1</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">에스원 보이스봇 요건정의 Case/Roleplay를 검증해 주시기 바랍니다.</span>
+        </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">김민식 책임님</span>
+                    <span class="person-badge">3</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">미팅노트 시각화 프롬프트 수정 사항을 확인해 주시기 바랍니다.</span>
+        </div><div class="detail-wrap">
+                <details>
+                    <summary class="detail-pill">&#9654;&ensp;프롬프트 정리 보기</summary>
+                    <div class="detail-content">
+<p>로컬 ~/Downloads/ 에서 미팅/회의 관련 .txt 파일을 하나 찾아서 읽고,
+아래 스타일 가이드로 시각화된 HTML 회의록을 만들어줘.
+같은 폴더에 [원본파일명].html 로 저장하고 깃허브 페이지로 만들고 팀 깃허브계정의 레포에 저장해줘.</p>
+
+<p style="margin-top:12px;font-weight:600;">디자인 스타일 (Apple.com)</p>
+<ul style="padding-left:16px;margin-top:6px;">
+<li>배경 #FFFFFF / 텍스트 #1D1D1F / 보조 텍스트 #6E6E73</li>
+<li>강조색 #0071E3 — 최소한으로만</li>
+<li>폰트: -apple-system, "Helvetica Neue", sans-serif</li>
+<li>헤드라인: clamp(42px, 7vw, 72px), font-weight 700</li>
+<li>섹션 padding 100px 24px / max-width 1100px</li>
+<li>버튼: pill형 (border-radius 980px)</li>
+<li>스크롤 fade-in: opacity 0→1 + translateY</li>
+</ul>
+
+<p style="margin-top:12px;font-weight:600;">회의록 콘텐츠 → 시각화 매핑</p>
+<ul style="padding-left:16px;margin-top:6px;">
+<li>Hero → 회의 제목(대형) + 일시/참석자/목적 메타 행</li>
+<li>수치/규모 → Stat Card 그리드</li>
+<li>일정/순서 → 수직 타임라인</li>
+<li>우선순위/목록 → 번호 + badge 리스트</li>
+<li>이슈/리스크 → 아이콘 카드 그리드</li>
+<li>경쟁/비교 → 비교 카드</li>
+<li>Action Items → 담당자/팀별 그룹 카드</li>
+<li>Q&amp;A → Q 마크 + A 블록</li>
+<li>리스크 요약 → HIGH/MID badge 테이블</li>
+</ul>
+</div>
+                </details>
+            </div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">롤플레이 Git 수정사항(082_update 레포)을 팀에 공유해 주시기 바랍니다.</span>
+        </div><div class="detail-wrap">
+                <details>
+                    <summary class="detail-pill">&#9654;&ensp;Git 수정 파일 목록</summary>
+                    <div class="detail-content">
+<p><strong>레포</strong>:
+<a href="https://github.com/aiccbiz2/082_update" style="color:#0071E3;text-decoration:none;">
+https://github.com/aiccbiz2/082_update</a> (Private)</p>
+
+<table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:13px;">
+<tr style="background:#F5F5F7;">
+  <th style="text-align:left;padding:8px 10px;border-bottom:1px solid #E5E5EA;">파일</th>
+  <th style="text-align:left;padding:8px 10px;border-bottom:1px solid #E5E5EA;">내용</th>
+</tr>
+<tr><td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;"><code>082_수정내역_0403-0405.md</code></td>
+    <td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;">금토일 수정 내역 요약</td></tr>
+<tr><td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;"><code>quiz_pool.json</code></td>
+    <td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;">50문항 퀴즈</td></tr>
+<tr><td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;"><code>AICC_도메인_퀴즈_정답지.md</code></td>
+    <td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;">퀴즈 정답지</td></tr>
+<tr><td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;"><code>AICC_롤플레이_정답지.md</code></td>
+    <td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;">롤플레이 정답지</td></tr>
+<tr><td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;"><code>통합본_A-H.md</code></td>
+    <td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;">Stage A~H 통합본</td></tr>
+<tr><td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;"><code>시나리오별 GT.md</code></td>
+    <td style="padding:6px 10px;border-bottom:1px solid #F2F2F7;">시나리오별 Ground Truth</td></tr>
+<tr><td style="padding:6px 10px;"><code>롤플레이_시나리오.md</code></td>
+    <td style="padding:6px 10px;">롤플레이 시나리오</td></tr>
+</table>
+</div>
+                </details>
+            </div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">롤플레이 AI고객답변을 수정해 주시기 바랍니다.</span>
+        </div><div class="sub-item"><span class="sub-dot"></span><span>각 답변별 좋아요/싫어요 피드백루프를 구현해 주시기 바랍니다.</span></div><div class="sub-item"><span class="sub-dot"></span><span>한화생명 케이스의 잘못된 답변 노출 문제를 수정해 주시기 바랍니다.</span></div><div class="sub-item"><span class="sub-dot"></span><span>90부대 조직도 오픈 시나리오 출처(내부/고객회의)를 확인하고, 내부회의 기반이면 삭제해 주시기 바랍니다.</span></div><div class="detail-wrap">
+                <details>
+                    <summary class="detail-pill">&#9654;&ensp;캡처 화면 보기</summary>
+                    <div class="detail-content">
+<p style="font-weight:600;margin-bottom:10px;">한화생명 케이스 — 잘못된 답변 노출</p>
+<img src="img/hanwha.png" alt="한화생명 캡처"
+     style="max-width:100%;border-radius:8px;border:1px solid #E5E5EA;margin-bottom:16px;" />
+
+<p style="font-weight:600;margin-bottom:10px;">90부대 조직도 — 오픈 시나리오 출처 확인</p>
+<img src="img/90unit.png" alt="90부대 캡처"
+     style="max-width:100%;border-radius:8px;border:1px solid #E5E5EA;" />
+</div>
+                </details>
+            </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">최종우 책임님</span>
+                    <span class="person-badge">2</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">놀유니버스 회의록 원본(전우경 팀장 공유건)을 TXT로 정리하여 디스코드에 업로드해 주시기 바랍니다.</span>
+        </div><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">상담봇(이주선 책임 공유메일 참고) HTML을 부서문서함에 저장해 주시기 바랍니다.</span>
+        </div></div>
+            </div><div class="person-card">
+                <div class="person-header">
+                    <span class="person-name">배홍주 책임님</span>
+                    <span class="person-badge">1</span>
+                </div>
+                <div class="person-tasks"><div class="task-item">
+            <span class="task-dot"></span>
+            <span class="task-text">신한카드 관련 영업팀 부사장 보고 자료(팀즈 수신건)를 TXT로 정리하여 디스코드에 업로드해 주시기 바랍니다.</span>
+        </div></div>
+            </div></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer-divider"></div>
+    <div class="footer-note">
+        <span>최종우 책임님, 팀 컨플루언스 주간회의 페이지 내 저장해 주시기 바랍니다.</span>
+    </div>
+    <div class="footer-cta">
+        <a href="https://www.notion.so/20260406_AI-2-Weekly-Logs-339b592202868119b411dea7c66528e3">Notion 페이지 열기</a>
+    </div>
+    <div class="bottom-bar">
+        <span>AI사업2팀 &middot; LG유플러스</span>
+    </div>
+
+</div>
+</div>
+
+</body>
+</html>
